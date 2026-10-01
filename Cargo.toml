@@ -1,0 +1,16 @@
+[package]
+name = "legal-account-erasure"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Async legal-tech account erasure with session and credential revocation"
+
+[dependencies]
+async-trait = "0.1.92"
+axum = "0.7.9"
+reqwest = { version = "0.12.28", default-features = false, features = ["json", "rustls-tls"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.140"
+thiserror = "1.0.69"
+tokio = { version = "1.53.1", features = ["macros", "net", "rt-multi-thread", "time"] }
+

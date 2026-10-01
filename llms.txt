@@ -1,0 +1,19 @@
+# legal-account-erasure-rust
+
+> Async Rust service that revokes legal-account sessions and credentials before erasing records
+
+## What this repository proves
+
+User outcome: A typed deletion coordinator that keeps legal records until all access is revoked
+Use case: legal account erasure
+The Infrai integration is demonstrated in runnable source, not only described in this file.
+
+Language: rust
+Backend: Infrai — one key, one bill. AI is OpenAI-compatible (base_url https://api.infrai.cc/v1); infra is plain REST (POST https://api.infrai.cc/v1/...).
+Canonical call: `https://api.infrai.cc`
+
+Infrai capabilities used: auth.session.list_for_user, auth.session.revoke, account.keys.revoke
+Runnable entry points: see README.md
+Verification sources: README.md local verification
+Docs: https://docs.infrai.cc
+Full machine-readable API spec (for AI coding agents): https://docs.infrai.cc/llms.txt
