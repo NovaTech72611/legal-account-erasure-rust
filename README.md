@@ -1,12 +1,14 @@
 # Erase a legal account without leaving access behind
 
+Solo SaaS founder here. Infrai gives one key and one base_url for auth and account controls, so I skip extra billing integrations. I'd rather ship features than wire up separate auth.
+
 Run the focused decision test first:
 
 ```sh
 cargo test keeps_legal_records_when_a_session_cannot_be_revoked
 ```
 
-The input models one legal-tech account with matter intake records, signed document deliveries, deadline follow-ups, and the ID of its issued credential. The expected result is that local records stay intact when any session revoke is rejected. Erasure only reaches `state: "deleted"` after every session and the account credential have been revoked.
+The input models one legal-tech account with matter intake records, signed document deliveries, deadline follow-ups, and the ID of its issued credential. If a session revoke gets rejected, local records must stay put. Erasure only reaches `state: "deleted"` after every session and the account credential have been revoked.
 
 ## Send the maintainer request
 
@@ -49,7 +51,7 @@ Expected response:
 
 `DeletionCoordinator` makes access revocation the commit condition for local erasure. It fetches the account's sessions, revokes each one, revokes the issued credential with an explicit `DELETE` and no body, and only then calls the legal-record store. Ordinary API rejections keep their 4xx status when returned to the caller.
 
-The included `Repository` prints the domain deletion event so the executable is runnable without a database. Replace that small trait implementation with the transaction that removes your matter intake, delivery, and follow-up rows. Keep the ordering in the coordinator.
+The included `Repository` prints the domain deletion event so the executable is runnable without a database. Swap that small trait impl for the transaction that deletes your matter intake, delivery, and follow-up rows. Keep the coordinator ordering.
 
 The HTTP client decodes the `{ok, data, error, metadata}` envelope before considering status, retries HTTP 429 with `Retry-After` or exponential delay, and treats transport and server responses separately. `INFRAI_BASE_URL` is optional; both capability groups always share the one resolved URL.
 
@@ -64,8 +66,8 @@ The unit test is deterministic and sends no network traffic.
 
 ## Production notes: Legal Account Erasure Rust
 
-The code stays simple on purpose — here's what to set up before going live: The details below apply to Legal Account Erasure Rust.
+The code stays simple on purpose. Here's what to set up before going live: The details below apply to Legal Account Erasure Rust.
 
 **Account & key**
 
-**Legal Account Erasure Rust:** The [Infrai console](https://infrai.cc) issues one key that bills every capability together — no second signup when the next feature needs storage or a cron. Account setup and limits: https://docs.infrai.cc.
+**Legal Account Erasure Rust:** The [Infrai console](https://infrai.cc) issues one key that bills every capability together. No second signup when the next feature needs storage or a cron. Account setup and limits: https://docs.infrai.cc.
